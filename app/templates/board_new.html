@@ -1,0 +1,213 @@
+{% extends "base.html" %}
+
+{% block title %}DevFolio · 포트폴리오 등록{% endblock %}
+
+{% block extra_head %}
+  <style>
+    /* --- [기존 고퀄리티 CSS 유지] --- */
+    .board-new-wrap {
+      max-width: 720px;
+      margin: 32px auto 60px;
+    }
+
+    .board-new-header {
+      margin-bottom: 24px;
+      text-align: center;
+    }
+
+    .board-new-header h1 {
+      font-size: 28px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 8px;
+    }
+
+    .board-new-header p {
+      margin: 0;
+      font-size: 15px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .board-new-card {
+      padding: 32px;
+      border-radius: 24px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 20px 40px -5px rgba(0,0,0,0.08);
+    }
+
+    /* 뱃지 스타일 */
+    .board-new-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: #eff6ff;
+      color: #2563eb;
+      font-size: 12px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+
+    .board-new-badge-dot {
+      width: 6px; height: 6px;
+      border-radius: 999px;
+      background: #3b82f6;
+    }
+
+    .board-new-form {
+      display: grid;
+      gap: 20px;
+    }
+
+    .board-new-field label {
+      display: block;
+      font-size: 14px;
+      font-weight: 700;
+      color: #334155;
+      margin-bottom: 8px;
+    }
+
+    .board-new-field input[type="text"],
+    .board-new-field textarea {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 12px;
+      border: 1px solid #cbd5e1;
+      font-size: 15px;
+      transition: all 0.2s;
+      background: #f8fafc;
+    }
+
+    .board-new-field textarea {
+      resize: vertical;
+      min-height: 240px;
+      line-height: 1.6;
+    }
+
+    .board-new-field input:focus,
+    .board-new-field textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      background: #ffffff;
+      box-shadow: 0 0 0 4px rgba(37,99,235,0.1);
+    }
+
+    .board-new-hint {
+      margin-top: 6px;
+      font-size: 12px;
+      color: #94a3b8;
+    }
+
+    /* 버튼 영역 */
+    .board-new-actions {
+      margin-top: 12px;
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    .btn-primary {
+      padding: 12px 24px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #f9fafb;
+      font-size: 15px;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.3);
+      transition: all 0.2s;
+    }
+
+    .btn-primary:hover {
+      filter: brightness(1.1);
+      transform: translateY(-1px);
+    }
+
+    .btn-ghost {
+      padding: 12px 20px;
+      border-radius: 12px;
+      border: 1px solid #e2e8f0;
+      background: #ffffff;
+      font-size: 14px;
+      color: #64748b;
+      text-decoration: none;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .btn-ghost:hover {
+      background: #f1f5f9;
+      color: #334155;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="board-new-wrap">
+    <header class="board-new-header">
+      <h1>포트폴리오 등록</h1>
+      <p>완성된 포트폴리오를 동료 개발자들에게 공유하세요.</p>
+    </header>
+
+    <section class="board-new-card">
+      <div class="board-new-badge">
+        <span class="board-new-badge-dot"></span>
+        <span>Tip: 전문 분야 태그를 입력하면 검색 노출에 유리합니다.</span>
+      </div>
+
+      <form class="board-new-form" method="post" action="/board/new">
+        
+        <div class="board-new-field">
+          <label for="title">한 줄 소개 (Title)</label>
+          <input
+            id="title"
+            type="text"
+            name="title"
+            placeholder="예) 3년차 백엔드 개발자의 포트폴리오입니다."
+            required
+          />
+        </div>
+
+        <div class="board-new-field">
+          <label for="tags">전문 분야 태그 (Tags)</label>
+          <input
+            id="tags"
+            type="text"
+            name="tags"
+            placeholder="예) 알고리즘, 컴퓨터비전, 분산처리, React (쉼표로 구분)"
+          />
+          <div class="board-new-hint">
+            자신의 강점 분야를 해시태그 형식으로 입력해주세요. 목록에 뱃지로 표시됩니다.
+          </div>
+        </div>
+
+        <div class="board-new-field">
+          <label>작성자</label>
+          <div style="font-size:14px; color:#334155; padding: 12px; background:#f1f5f9; border-radius:10px;">
+            <span style="font-weight:600;">{{ user }}</span> 님으로 게시됩니다.
+          </div>
+        </div>
+
+        <div class="board-new-field">
+          <label for="content">상세 소개</label>
+          <textarea
+            id="content"
+            name="content"
+            placeholder="AI가 생성한 자기소개 내용을 복사해 붙여넣거나, 프로젝트 경험을 자유롭게 기술해주세요."
+            required
+          ></textarea>
+        </div>
+
+        <div class="board-new-actions">
+          <a class="btn-ghost" href="/board">취소</a>
+          <button class="btn-primary" type="submit">게시글 등록 완료</button>
+        </div>
+      </form>
+
+    </section>
+  </div>
+{% endblock %}

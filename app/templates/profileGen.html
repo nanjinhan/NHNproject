@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <title>프로필 생성기 입력 폼</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 p-8">
+    <div class="max-w-2xl mx-auto bg-white p-8 rounded-lg shadow-md">
+        <h1 class="text-2xl font-bold mb-6 text-center">AI 프로필 페이지 생성기</h1>
+        
+        <form action="/profileGen/generate" method="post" class="space-y-4">
+            <div class="bg-blue-50 p-4 rounded-md">
+                <h2 class="text-xl font-semibold mb-4">1. 기본 정보</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">이름</label>
+                        <input type="text" name="name" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">전공/직무</label>
+                        <input type="text" name="major" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">이메일</label>
+                        <input type="email" name="email" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">태그 (콤마로 구분)</label>
+                        <input type="text" name="tags_str" placeholder="예: 백엔드, Python, 성장지향" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border">
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-green-50 p-4 rounded-md">
+                <h2 class="text-xl font-semibold mb-4">2. 자기소개 (자유 입력)</h2>
+                <div>
+                    <label class="block text-sm font-medium text-gray-700">자기소개, 가치관, 관심사 등</label>
+                    <textarea name="user_bio_text" rows="6" required class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" placeholder="자유롭게 자신을 소개해 주세요. AI가 이 내용을 바탕으로 내용을 구성합니다."></textarea>
+                </div>
+            </div>
+
+            <div class="bg-purple-50 p-4 rounded-md">
+                <h2 class="text-xl font-semibold mb-4">3. 이미지 요청 (선택사항)</h2>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">프로필 이미지 요청사항 (원형 아이콘)</label>
+                        <input type="text" name="profile_img_request" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" placeholder="예: 따뜻하게 웃고 있는 모습, 자연광">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700">배너 이미지 요청사항 (넓은 배경)</label>
+                        <input type="text" name="banner_img_request" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm p-2 border" placeholder="예: 맥북과 커피가 있는 코딩 책상, 창밖 풍경">
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center pt-4">
+                <button type="submit" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition-colors">
+                    프로필 페이지 생성하기 (약 1분 소요)
+                </button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>

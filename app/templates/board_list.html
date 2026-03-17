@@ -1,0 +1,373 @@
+{% extends "base.html" %}
+
+{% block title %}DevFolio · 포트폴리오 게시판{% endblock %}
+
+{% block extra_head %}
+  <style>
+    /* --- [1. 레이아웃 & 헤더 스타일 (원본 퀄리티 유지)] --- */
+    .board-wrap {
+      margin-top: 32px;
+      max-width: 900px;
+      margin-left: auto;
+      margin-right: auto;
+      padding-bottom: 60px;
+    }
+
+    .board-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 16px;
+      margin-bottom: 24px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid #e2e8f0;
+    }
+
+    .board-header-title h1 {
+      font-size: 26px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 8px;
+      letter-spacing: -0.02em;
+    }
+
+    .board-header-title p {
+      margin: 0;
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.5;
+    }
+
+    .board-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    /* --- [2. 버튼 및 뱃지 스타일] --- */
+    .btn-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 10px 20px;
+      border-radius: 12px;
+      border: none;
+      background: linear-gradient(135deg, #2563eb, #1d4ed8);
+      color: #ffffff;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      text-decoration: none;
+      box-shadow: 0 4px 12px rgba(37,99,235,0.25);
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+    
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(37,99,235,0.35);
+      filter: brightness(1.05);
+    }
+
+    .stat-badge {
+      display: inline-block;
+      padding: 6px 12px;
+      background: #f1f5f9;
+      color: #64748b;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid #e2e8f0;
+    }
+
+    /* --- [3. 리스트 & 카드 스타일 (상세 디자인)] --- */
+    .board-list {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .board-item {
+      background: #ffffff;
+      border-radius: 18px;
+      padding: 24px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 20px;
+      transition: all 0.2s ease-in-out;
+      position: relative;
+    }
+
+    /* 마우스 올렸을 때 고급스러운 효과 */
+    .board-item:hover {
+      border-color: #bfdbfe;
+      box-shadow: 0 12px 30px -10px rgba(37,99,235,0.15);
+      transform: translateY(-2px);
+      z-index: 1;
+    }
+
+    .board-item-content {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    /* 제목 스타일 */
+    .board-item-title {
+      font-size: 18px;
+      font-weight: 700;
+      color: #1e293b;
+      text-decoration: none;
+      transition: color 0.2s;
+      display: block;
+      line-height: 1.4;
+    }
+
+    .board-item:hover .board-item-title {
+      color: #2563eb;
+    }
+
+    /* 부제목 (role_title) */
+    .board-item-subtitle {
+      font-size: 14px;
+      color: #64748b;
+      line-height: 1.4;
+      margin-top: -4px;
+    }
+
+    /* [핵심 기능] 태그 스타일 (#알고리즘 #백엔드) */
+    .board-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 4px;
+    }
+
+    .tag-badge {
+      display: inline-flex;
+      align-items: center;
+      padding: 4px 10px;
+      border-radius: 8px;
+      background: #eff6ff; /* 연한 파랑 배경 */
+      color: #2563eb;      /* 진한 파랑 글씨 */
+      font-size: 12px;
+      font-weight: 600;
+      border: 1px solid #dbeafe;
+      transition: background 0.2s;
+    }
+
+    .tag-badge:hover {
+      background: #dbeafe;
+    }
+
+    /* 작성자 및 메타 정보 */
+    .board-item-meta {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 13px;
+      color: #94a3b8;
+      margin-top: 6px;
+    }
+
+    .author-name {
+      color: #475569;
+      font-weight: 600;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+    
+    .author-avatar {
+      width: 24px; 
+      height: 24px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+      display: inline-block;
+    }
+
+    /* 게시글 ID (우측 하단) */
+    .board-item-id {
+      font-size: 12px;
+      color: #cbd5e1;
+      font-family: monospace;
+      font-weight: 600;
+      align-self: flex-start;
+      margin-top: 4px;
+    }
+
+    /* --- [4. 빈 상태(Empty State) 디자인] --- */
+    .board-empty {
+      padding: 80px 20px;
+      border-radius: 24px;
+      background: #f8fafc;
+      border: 2px dashed #e2e8f0;
+      text-align: center;
+      color: #64748b;
+      margin-top: 20px;
+    }
+    
+    .board-empty-icon { 
+      font-size: 48px; 
+      margin-bottom: 16px; 
+      display: inline-block;
+      filter: grayscale(100%);
+      opacity: 0.5;
+    }
+    
+    .board-empty h3 { 
+      font-size: 18px; 
+      color: #334155; 
+      margin: 0 0 8px; 
+      font-weight: 700; 
+    }
+    
+    .board-empty p {
+      font-size: 14px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+
+    .board-empty-action {
+      margin-top: 16px;
+    }
+
+    /* --- [5. 반응형] --- */
+    @media (max-width: 768px) {
+      .board-wrap {
+        padding: 20px 16px;
+      }
+
+      .board-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .board-item {
+        flex-direction: column;
+        gap: 12px;
+      }
+
+      .board-item-id {
+        align-self: flex-end;
+      }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="board-wrap">
+    
+    <header class="board-header">
+      <div class="board-header-title">
+        <h1>DevFolio Connect</h1>
+        <p>
+          동료 개발자들의 포트폴리오를 탐색하세요.<br>
+          AI로 생성된 전문적인 자기소개를 확인할 수 있습니다.
+        </p>
+      </div>
+      <div class="board-header-actions">
+        <span class="stat-badge">
+          {% if posts %} Total {{ posts|length }} {% else %} Total 0 {% endif %}
+        </span>
+        
+        {% if user %}
+          <a class="btn-primary" href="/profileGen">
+            <span>✨</span> 내 프로필 관리
+          </a>
+        {% else %}
+          <a class="btn-primary" href="/login">
+            로그인 후 등록
+          </a>
+        {% endif %}
+      </div>
+    </header>
+
+    {% if posts and posts|length > 0 %}
+      <ul class="board-list">
+        {% for post in posts %}
+          <li class="board-item">
+            <div class="board-item-content">
+              <!-- 이름(display_name) -->
+              <a href="/board/{{ post.id }}" class="board-item-title">
+                {{ post.display_name or post.author or "익명" }}
+              </a>
+
+              <!-- 직무/역할 (role_title) -->
+              {% if post.role_title %}
+                <div class="board-item-subtitle">
+                  {{ post.role_title }}
+                </div>
+              {% endif %}
+
+              <!-- 한 줄 소개 (headline) -->
+              {% if post.headline %}
+                <div class="board-item-subtitle">
+                  {{ post.headline }}
+                </div>
+              {% endif %}
+
+              <!-- 태그 표시 -->
+              <div class="board-tags">
+                {% if post.tags %}
+                   {% if post.tags is string %}
+                      {% for tag in post.tags.split(',') %}
+                        {% if tag.strip() %}
+                          <span class="tag-badge">#{{ tag.strip() }}</span>
+                        {% endif %}
+                      {% endfor %}
+                   {% else %}
+                      <span class="tag-badge">#{{ post.tags }}</span>
+                   {% endif %}
+                {% endif %}
+              </div>
+
+              <!-- 메타 정보 -->
+              <div class="board-item-meta">
+                <span class="author-name">
+                  <span class="author-avatar"></span>
+                  {{ post.author or "익명" }}
+                </span>
+                {% if post.created_at %}
+                  <span>·</span>
+                  <span>{{ post.created_at }}</span>
+                {% endif %}
+              </div>
+            </div>
+            
+            <div class="board-item-id">#{{ post.id }}</div>
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <div class="board-empty">
+        <div class="board-empty-icon">📂</div>
+        <h3>아직 등록된 포트폴리오가 없습니다.</h3>
+        <p>
+          가장 먼저 AI로 생성한 전문적인 자기소개를 공유해 보세요!
+        </p>
+        {% if user %}
+          <div class="board-empty-action">
+            <a class="btn-primary" href="/profileGen">
+              <span>✨</span> 내 프로필 생성하기
+            </a>
+          </div>
+        {% else %}
+          <div class="board-empty-action">
+            <a class="btn-primary" href="/login">
+              로그인하고 시작하기
+            </a>
+          </div>
+        {% endif %}
+      </div>
+    {% endif %}
+  </div>
+{% endblock %}

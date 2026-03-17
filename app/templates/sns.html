@@ -1,0 +1,203 @@
+{% extends "base.html" %}
+
+{% block title %}DevFolio · 결과 확인{% endblock %}
+
+{% block extra_head %}
+  <style>
+    /* --- [결과 페이지 전용 스타일] --- */
+    .result-wrap {
+      max-width: 800px;
+      margin: 40px auto 80px;
+      padding: 0 20px;
+    }
+
+    /* 헤더 메시지 */
+    .result-header {
+      text-align: center;
+      margin-bottom: 40px;
+      animation: fadeIn 0.8s ease;
+    }
+    .result-header h1 {
+      font-size: 32px;
+      font-weight: 800;
+      color: #0f172a;
+      margin: 0 0 10px;
+    }
+    .result-header p {
+      font-size: 16px;
+      color: #64748b;
+      line-height: 1.6;
+    }
+
+    /* 포트폴리오 카드 (등장 애니메이션) */
+    .pf-card {
+      background: #ffffff;
+      border-radius: 24px;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 20px 60px -10px rgba(0,0,0,0.12);
+      overflow: hidden;
+      position: relative;
+      animation: slideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
+    }
+
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(40px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; } to { opacity: 1; }
+    }
+
+    /* 1. 배너 이미지 */
+    .pf-banner {
+      height: 220px;
+      background-color: #cbd5e1;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+    /* 그라데이션 오버레이 */
+    .pf-banner::after {
+      content: ""; position: absolute; inset: 0;
+      background: linear-gradient(to bottom, transparent 60%, rgba(0,0,0,0.5));
+    }
+
+    /* 2. 본문 영역 */
+    .pf-body { padding: 0 48px 48px; position: relative; }
+
+    /* 3. 프로필 아바타 */
+    .pf-avatar {
+      width: 140px; height: 140px;
+      border-radius: 50%;
+      border: 6px solid #ffffff;
+      background: #f1f5f9;
+      object-fit: cover;
+      margin-top: -70px;
+      position: relative;
+      z-index: 2;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+    }
+
+    /* 4. 기본 정보 (이름, 직무) */
+    .pf-info { margin-top: 20px; margin-bottom: 32px; }
+    .pf-name { font-size: 32px; font-weight: 800; color: #0f172a; margin: 0 0 8px; }
+    .pf-role {
+      display: inline-block; font-size: 15px; font-weight: 700; color: #2563eb;
+      background: #eff6ff; padding: 6px 14px; border-radius: 99px; border: 1px solid #dbeafe;
+    }
+
+    /* 5. 섹션 스타일 */
+    .pf-section { margin-bottom: 40px; }
+    .pf-label {
+      font-size: 13px; font-weight: 800; color: #94a3b8;
+      text-transform: uppercase; letter-spacing: 0.05em;
+      margin-bottom: 12px; border-bottom: 1px solid #f1f5f9; padding-bottom: 8px;
+    }
+
+    /* 자기소개 텍스트 */
+    .pf-bio {
+      font-size: 16px; line-height: 1.8; color: #334155; white-space: pre-wrap;
+    }
+
+    /* 기술 스택 태그 */
+    .skill-badges { display: flex; flex-wrap: wrap; gap: 8px; }
+    .skill-tag {
+      padding: 8px 16px; border-radius: 12px;
+      background: #ffffff; border: 1px solid #e2e8f0;
+      color: #334155; font-weight: 600; font-size: 14px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+    }
+
+    /* 프로젝트 리스트 */
+    .project-list { display: grid; gap: 16px; }
+    .project-item {
+      padding: 24px; border-radius: 16px;
+      background: #f8fafc; border: 1px solid #e2e8f0;
+      transition: all 0.2s;
+    }
+    .project-item:hover {
+      background: #ffffff; border-color: #cbd5e1;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.05); transform: translateX(4px);
+    }
+    .pj-title { font-size: 18px; font-weight: 700; color: #0f172a; margin-bottom: 6px; }
+    .pj-desc { font-size: 15px; color: #64748b; line-height: 1.5; margin: 0; }
+
+    /* 하단 버튼 그룹 */
+    .action-bar {
+      display: flex; gap: 16px; justify-content: center; margin-top: 60px;
+    }
+    .btn-act {
+      padding: 14px 32px; border-radius: 14px; font-weight: 700; font-size: 16px;
+      cursor: pointer; text-decoration: none; transition: transform 0.2s; border: none;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .btn-share { background: #0f172a; color: white; box-shadow: 0 10px 20px rgba(15,23,42,0.2); }
+    .btn-share:hover { transform: translateY(-3px); background: #1e293b; }
+    
+    .btn-retry { background: #ffffff; color: #64748b; border: 1px solid #e2e8f0; }
+    .btn-retry:hover { background: #f8fafc; color: #334155; border-color: #cbd5e1; }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="result-wrap">
+    
+    <div class="result-header">
+      <h1>Portfolio Generated ✨</h1>
+      <p>
+        AI가 GitHub 코드와 인터뷰 내용을 분석하여<br>
+        가장 매력적인 <strong>개발자 프로필</strong>을 완성했습니다.
+      </p>
+    </div>
+
+    <div class="pf-card">
+      <div class="pf-banner" style="background-image: url('{{ banner_url }}');"></div>
+      
+      <div class="pf-body">
+        <img class="pf-avatar" src="{{ profile_url }}" alt="Profile Avatar">
+        
+        <div class="pf-info">
+          <h2 class="pf-name">{{ name }}</h2>
+          <div class="pf-role">{{ role }}</div>
+        </div>
+
+        <div class="pf-section">
+          <div class="pf-label">About Me</div>
+          <div class="pf-bio">{{ bio }}</div>
+        </div>
+
+        <div class="pf-section">
+          <div class="pf-label">Tech Stack</div>
+          <div class="skill-badges">
+            {% for skill in skills %}
+              <span class="skill-tag">{{ skill }}</span>
+            {% endfor %}
+          </div>
+        </div>
+
+        <div class="pf-section">
+          <div class="pf-label">Key Projects</div>
+          <div class="project-list">
+            {% for project in projects %}
+              <div class="project-item">
+                <div class="pj-title">{{ project.title }}</div>
+                <div class="pj-desc">{{ project.desc }}</div>
+              </div>
+            {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="action-bar">
+      <a href="/board/new" class="btn-act btn-share">
+        <span>🚀 게시판에 공유하기</span>
+      </a>
+      
+      <a href="/gallery" class="btn-act btn-retry">
+        <span>다시 만들기</span>
+      </a>
+    </div>
+
+  </div>
+{% endblock %}

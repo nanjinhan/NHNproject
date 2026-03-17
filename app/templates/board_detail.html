@@ -1,0 +1,130 @@
+<!-- app/templates/board_detail.html -->
+{% extends "base.html" %}
+
+{% block title %}Project Day · {{ post.title }}{% endblock %}
+
+{% block extra_head %}
+  <style>
+    .board-detail-wrap {
+      max-width: 720px;
+      margin: 24px auto 0;
+    }
+
+    .board-detail-header {
+      margin-bottom: 10px;
+    }
+
+    .board-detail-title {
+      font-size: 20px;
+      margin: 0 0 4px;
+      color: #0f172a;
+    }
+
+    .board-detail-meta {
+      font-size: 12px;
+      color: #9ca3af;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .board-detail-meta-left {
+      display: inline-flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      align-items: center;
+    }
+
+    .board-detail-meta-author {
+      color: #6b7280;
+    }
+
+    .board-detail-card {
+      margin-top: 12px;
+      padding: 18px 18px 16px;
+      border-radius: 18px;
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      box-shadow: 0 14px 30px rgba(148,163,184,0.25);
+    }
+
+    .board-detail-content {
+      font-size: 14px;
+      line-height: 1.7;
+      color: #111827;
+      white-space: pre-wrap;
+      word-break: break-word;
+      margin: 0;
+    }
+
+    .board-detail-footer {
+      margin-top: 14px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-ghost {
+      padding: 8px 12px;
+      border-radius: 999px;
+      border: 1px solid #e5e7eb;
+      background: #ffffff;
+      font-size: 13px;
+      color: #4b5563;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    .btn-ghost:hover {
+      background: #f9fafb;
+    }
+
+    .board-detail-note {
+      font-size: 11px;
+      color: #9ca3af;
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <div class="board-detail-wrap">
+    <header class="board-detail-header">
+      <h1 class="board-detail-title">{{ post.title }}</h1>
+      <div class="board-detail-meta">
+        <div class="board-detail-meta-left">
+          <span>#{{ post.id }}</span>
+          {% if post.created_at is defined %}
+            <span>· {{ post.created_at }}</span>
+          {% endif %}
+          <span class="board-detail-meta-author">
+            · 작성자:
+            {% if post.author is defined and post.author %}
+              {{ post.author }}
+            {% else %}
+              익명
+            {% endif %}
+          </span>
+        </div>
+        <!-- 여기 문구만 프로젝트용으로 정리 -->
+        <span>프로젝트 메모 · 진행 상황 공유</span>
+      </div>
+    </header>
+
+    <section class="board-detail-card">
+      <p class="board-detail-content">
+        {{ post.content }}
+      </p>
+
+      <div class="board-detail-footer">
+        <a class="btn-ghost" href="/board">목록으로</a>
+        <div class="board-detail-note">
+          향후 필요에 따라 내용 수정이나 댓글 기능을 추가로 구현할 수 있습니다.
+        </div>
+      </div>
+    </section>
+  </div>
+{% endblock %}

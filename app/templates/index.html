@@ -1,0 +1,305 @@
+{% extends "base.html" %}
+
+{% block title %}DevFolio · AI Career Platform{% endblock %}
+
+{% block extra_head %}
+  <style>
+    /* --- [Hero Animation & Layout] --- */
+    @keyframes float {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(-12px); }
+    }
+    @keyframes float-reverse {
+      0%, 100% { transform: translateY(0px); }
+      50% { transform: translateY(8px); }
+    }
+    @keyframes fade-up {
+      from { opacity: 0; transform: translateY(30px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* 메인 컨테이너 */
+    .hero-wrapper {
+      position: relative;
+      background: #ffffff;
+      border-radius: 32px;
+      padding: 80px 60px;
+      overflow: hidden;
+      border: 1px solid #e2e8f0;
+      box-shadow: 
+        0 0 0 1px rgba(0,0,0,0.01),
+        0 20px 60px -10px rgba(0,0,0,0.08);
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 60px;
+      align-items: center;
+      min-height: 620px;
+      margin-top: 20px;
+    }
+
+    /* 배경 오로라 효과 */
+    .hero-bg-1 {
+      position: absolute; top: -20%; right: -10%; width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(37,99,235,0.12) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(80px); z-index: 0; pointer-events: none;
+    }
+    .hero-bg-2 {
+      position: absolute; bottom: -20%; left: -10%; width: 500px; height: 500px;
+      background: radial-gradient(circle, rgba(99,102,241,0.1) 0%, rgba(255,255,255,0) 70%);
+      filter: blur(80px); z-index: 0; pointer-events: none;
+    }
+
+    /* 왼쪽: 텍스트 영역 */
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      animation: fade-up 0.8s ease-out;
+    }
+
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 8px 16px; margin-bottom: 24px;
+      background: #eff6ff; color: var(--primary-600);
+      border-radius: 100px; font-size: 13px; font-weight: 700;
+      border: 1px solid #dbeafe;
+    }
+    .badge-dot { width: 8px; height: 8px; background: #3b82f6; border-radius: 50%; }
+
+    .hero-title {
+      font-size: 60px; /* 타이틀 크기 확대 */
+      line-height: 1.1;
+      font-weight: 800;
+      color: var(--slate-900);
+      margin: 0 0 24px;
+      letter-spacing: -0.03em;
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-desc {
+      font-size: 18px;
+      line-height: 1.7;
+      color: var(--slate-500);
+      margin-bottom: 48px;
+      max-width: 90%;
+    }
+
+    /* 버튼 그룹 */
+    .btn-group { display: flex; gap: 16px; align-items: center; }
+
+    .btn-main {
+      padding: 18px 36px;
+      background: var(--slate-900);
+      color: white;
+      border-radius: 16px;
+      font-size: 16px; font-weight: 700;
+      text-decoration: none;
+      display: inline-flex; align-items: center; gap: 10px;
+      transition: all 0.2s ease;
+      box-shadow: 0 10px 25px -5px rgba(15,23,42,0.3);
+    }
+    .btn-main:hover {
+      background: #2563eb; transform: translateY(-3px);
+      box-shadow: 0 20px 30px -10px rgba(37,99,235,0.4);
+    }
+
+    .btn-sub {
+      padding: 18px 28px;
+      background: white;
+      color: var(--slate-600);
+      border: 1px solid #e2e8f0;
+      border-radius: 16px;
+      font-size: 16px; font-weight: 600;
+      text-decoration: none; transition: all 0.2s;
+    }
+    .btn-sub:hover { background: #f8fafc; border-color: #cbd5e1; color: var(--slate-900); }
+
+    /* 하단 메타 태그 */
+    .meta-list { margin-top: 48px; display: flex; gap: 12px; flex-wrap: wrap; }
+    .meta-tag {
+      font-size: 13px; color: var(--slate-500);
+      display: flex; align-items: center; gap: 6px;
+      padding: 6px 12px; background: rgba(255,255,255,0.6);
+      border-radius: 8px; border: 1px solid #e2e8f0;
+    }
+
+    /* --- [Right Visual: CSS로 만든 3D 그래픽] --- */
+    .hero-visual {
+      position: relative;
+      z-index: 2;
+      display: flex; justify-content: center; align-items: center;
+      perspective: 1200px;
+    }
+
+    /* 메인 프로필 카드 */
+    .visual-card {
+      width: 400px;
+      background: rgba(255, 255, 255, 0.9);
+      backdrop-filter: blur(24px);
+      border-radius: 28px;
+      padding: 28px;
+      border: 1px solid rgba(255,255,255,0.8);
+      box-shadow: 
+        0 30px 60px -15px rgba(0,0,0,0.12),
+        0 0 0 1px rgba(0,0,0,0.05);
+      transform: rotateY(-8deg) rotateX(4deg);
+      animation: float 6s ease-in-out infinite;
+    }
+
+    .vc-header { display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
+    .vc-avatar {
+      width: 72px; height: 72px; border-radius: 50%;
+      background: linear-gradient(135deg, #cbd5e1, #94a3b8);
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+    .vc-info h3 { margin: 0; font-size: 20px; color: var(--slate-900); }
+    .vc-info p { margin: 4px 0 0; font-size: 14px; color: var(--slate-500); }
+
+    .vc-body { display: flex; flex-direction: column; gap: 12px; }
+    .vc-line { height: 12px; border-radius: 6px; background: #f1f5f9; width: 100%; }
+    .vc-line.active { background: #dbeafe; width: 80%; }
+    .vc-tags { display: flex; gap: 10px; margin-top: 12px; }
+    .vc-tag { height: 28px; width: 70px; border-radius: 8px; background: #eff6ff; }
+
+    /* 떠다니는 요소들 */
+    .float-item {
+      position: absolute;
+      background: white;
+      padding: 14px 20px;
+      border-radius: 16px;
+      box-shadow: 0 15px 35px -5px rgba(0,0,0,0.1);
+      border: 1px solid #f1f5f9;
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; font-weight: 700; color: var(--slate-600);
+      animation: float-reverse 5s ease-in-out infinite;
+    }
+    .float-icon {
+      width: 32px; height: 32px; border-radius: 10px;
+      display: flex; align-items: center; justify-content: center;
+      background: #f0fdf4; color: #16a34a; font-size: 18px;
+    }
+    .pos-1 { top: -30px; right: 20px; }
+    .pos-2 { bottom: 40px; left: -40px; animation-delay: 1.5s; }
+
+    /* --- [Bottom Section] --- */
+    .features-grid {
+      margin-top: 80px;
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+    }
+    .ft-card {
+      background: #ffffff; padding: 32px; border-radius: 24px;
+      border: 1px solid #e2e8f0; transition: transform 0.2s;
+    }
+    .ft-card:hover { transform: translateY(-5px); border-color: #bfdbfe; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+    .ft-icon {
+      width: 52px; height: 52px; border-radius: 16px;
+      background: #f8fafc; color: var(--slate-900);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 24px; margin-bottom: 24px;
+      border: 1px solid #f1f5f9;
+    }
+    .ft-title { font-size: 20px; font-weight: 800; color: var(--slate-900); margin-bottom: 10px; }
+    .ft-desc { font-size: 15px; color: var(--slate-500); line-height: 1.6; }
+
+    @media (max-width: 960px) {
+      .hero-wrapper { grid-template-columns: 1fr; text-align: center; padding: 60px 20px; }
+      .hero-content { display: flex; flex-direction: column; align-items: center; }
+      .hero-visual { display: none; }
+      .features-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+{% endblock %}
+
+{% block content %}
+  <section class="hero-wrapper">
+    <div class="hero-bg-1"></div>
+    <div class="hero-bg-2"></div>
+
+    <div class="hero-content">
+      <div class="hero-badge"><span class="badge-dot"></span>AI-Powered Career Platform</div>
+      
+      <h1 class="hero-title">
+        Your Code Tells a Story,<br>
+        <span>Let AI Write It.</span>
+      </h1>
+      
+      <p class="hero-desc">
+        GitHub 코드 분석과 AI 심층 인터뷰를 통해<br>
+        개발자의 경험과 가치를 가장 매력적인 포트폴리오로 시각화합니다.<br>
+        지금 바로 AI와 대화를 시작해보세요.
+      </p>
+
+      <div class="btn-group">
+        <a href="/gallery" class="btn-main">
+          <span>AI 인터뷰 시작하기</span>
+          <svg width="22" height="22" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M13 7l5 5m0 0l-5 5m5-5H6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        </a>
+        
+        <a href="/board" class="btn-sub">커뮤니티 둘러보기</a>
+      </div>
+
+      <div class="meta-list">
+        <div class="meta-tag">GitHub Analysis</div>
+        <div class="meta-tag">HCX HyperCLOVA</div>
+        <div class="meta-tag">Gen-AI Design</div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="visual-card">
+        <div class="vc-header">
+          <div class="vc-avatar"></div>
+          <div class="vc-info">
+            <h3>Kim Coding</h3>
+            <p>Backend Engineer</p>
+          </div>
+        </div>
+        <div class="vc-body">
+          <div class="vc-line active"></div>
+          <div class="vc-line"></div>
+          <div class="vc-line" style="width:60%;"></div>
+          <div class="vc-tags">
+            <div class="vc-tag"></div>
+            <div class="vc-tag"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="float-item pos-1">
+        <div class="float-icon">✨</div>
+        <div>AI Auto-Generated</div>
+      </div>
+      <div class="float-item pos-2">
+        <div class="float-icon">💬</div>
+        <div>Interview Mode</div>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-grid">
+    <div class="ft-card">
+      <div class="ft-icon">💬</div>
+      <h3 class="ft-title">AI 심층 인터뷰</h3>
+      <p class="ft-desc">
+        단순한 정보 입력이 아닙니다. AI와 대화를 나누며 당신의 개발 가치관과 숨겨진 강점을 찾아냅니다.
+      </p>
+    </div>
+    <div class="ft-card">
+      <div class="ft-icon">⚡</div>
+      <h3 class="ft-title">GitHub 정밀 분석</h3>
+      <p class="ft-desc">
+        GitHub 저장소를 분석하여 주력 기술 스택, 커밋 스타일, 프로젝트 경험을 자동으로 추출합니다.
+      </p>
+    </div>
+    <div class="ft-card">
+      <div class="ft-icon">🎨</div>
+      <h3 class="ft-title">비주얼 생성</h3>
+      <p class="ft-desc">
+        텍스트만 있는 이력서는 지루합니다. 당신의 코딩 스타일에 맞는 프로필 이미지와 배너를 생성합니다.
+      </p>
+    </div>
+  </section>
+{% endblock %}
